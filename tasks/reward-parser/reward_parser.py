@@ -16,13 +16,11 @@ SYMBOL_MAP = {
 CURRENCY_MAP = {}
 for c in CURRENCIES_CASH:
     CURRENCY_MAP[c] = ("cash", c)
-for c in CURRENCY_MAP.get(c, ()) if False else {}:
-    pass
-for c in CURRENCIES_CRYPTO:
+for c in CURRENCY_CRYPTO:
     CURRENCY_MAP[c] = ("crypto", c)
-for c in CURRENCIES_POINTS:
+for c in CURRENCY_POINTS:
     CURRENCY_MAP[c] = ("points", c)
-for c in CURRENCIES_BALANCE:
+for c in CURRENCY_BALANCE:
     CURRENCY_MAP[c] = ("site-balance", "CREDITS")
 
 UNKNOWN = {"amount": None, "currency": None, "kind": "unknown"}
@@ -118,14 +116,6 @@ def parse_reward(text: str) -> dict:
         if p0 in SYMBOL_MAP:
             sym = p0
             amt_str = p1
-        elif p0 and p0[0] in SYMBOL_MAP and p1.upper() in CURRENCY_MAP:
-            sym = p0[0]
-            amt_str = p0[1:]
-            code = p1.upper()
-        elif p0.upper() in CURRENCY_MAP and p1 and p1[0] in SYMBOL_MAP:
-            code = p0.upper()
-            sym = p1[0]
-            amt_str = p1[1:]
         elif p0.upper() in CURRENCY_MAP:
             code = p0.upper()
             amt_str = p1
@@ -136,14 +126,14 @@ def parse_reward(text: str) -> dict:
             return dict(UNKNOWN)
     elif len(parts) == 3:
         p0, p1, p2 = parts[0], parts[1], parts[2]
-        if p0 in SYMBOL_MAP and p2.upper() in CURRENCY_MAP:
+        if p0.upper() in CURRENCY_MAP and p2 in SYMBOL_MAP:
+            code = p0.upper()
+            amt_str = p1
+            sym = p2
+        elif p0 in SYMBOL_MAP and p2.upper() in CURRENCY_MAP:
             sym = p0
             amt_str = p1
             code = p2.upper()
-        elif p0.upper() in CURRENCY_MAP and p2 and p2[0] in SYMBOL_MAP:
-            code = p0.upper()
-            sym = p2[0]
-            amt_str = p1
         else:
             return dict(UNKNOWN)
     else:
