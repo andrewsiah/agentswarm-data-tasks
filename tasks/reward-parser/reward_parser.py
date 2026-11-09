@@ -16,6 +16,8 @@ SYMBOL_MAP = {
 CURRENCY_MAP = {}
 for c in CURRENCIES_CASH:
     CURRENCY_MAP[c] = ("cash", c)
+for c in CURRENCY_MAP.get(c, ()) if False else {}:
+    pass
 for c in CURRENCIES_CRYPTO:
     CURRENCY_MAP[c] = ("crypto", c)
 for c in CURRENCIES_POINTS:
@@ -120,10 +122,12 @@ def parse_reward(text: str) -> dict:
             sym = p0[0]
             amt_str = p0[1:]
             code = p1.upper()
+        elif p0.upper() in CURRENCY_MAP and p1 and p1[0] in SYMBOL_MAP:
+            code = p0.upper()
+            sym = p1[0]
+            amt_str = p1[1:]
         elif p0.upper() in CURRENCY_MAP:
             code = p0.upper()
-            if p1 and p1[0] in SYMBOL_MAP:
-                return dict(UNKNOWN)
             amt_str = p1
         elif p1.upper() in CURRENCY_MAP:
             code = p1.upper()
@@ -136,6 +140,10 @@ def parse_reward(text: str) -> dict:
             sym = p0
             amt_str = p1
             code = p2.upper()
+        elif p0.upper() in CURRENCY_MAP and p2 and p2[0] in SYMBOL_MAP:
+            code = p0.upper()
+            sym = p2[0]
+            amt_str = p1
         else:
             return dict(UNKNOWN)
     else:
