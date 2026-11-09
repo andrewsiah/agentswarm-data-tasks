@@ -16,11 +16,11 @@ SYMBOL_MAP = {
 CURRENCY_MAP = {}
 for c in CURRENCIES_CASH:
     CURRENCY_MAP[c] = ("cash", c)
-for c in CURRENCY_CRYPTO:
+for c in CURRENCIES_CRYPTO:
     CURRENCY_MAP[c] = ("crypto", c)
-for c in CURRENCY_POINTS:
+for c in CURRENCIES_POINTS:
     CURRENCY_MAP[c] = ("points", c)
-for c in CURRENCY_BALANCE:
+for c in CURRENCIES_BALANCE:
     CURRENCY_MAP[c] = ("site-balance", "CREDITS")
 
 UNKNOWN = {"amount": None, "currency": None, "kind": "unknown"}
