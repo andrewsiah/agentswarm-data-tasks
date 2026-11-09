@@ -99,7 +99,7 @@ def parse_reward(text: str) -> dict:
     if not s:
         return dict(UNKNOWN)
 
-    parts = s.split(" ")
+    parts = s.split()
     sym = None
     amt_str = None
     code = None
@@ -123,7 +123,18 @@ def parse_reward(text: str) -> dict:
             code = p1.upper()
             amt_str = p0
         else:
-            return dict(UNKNOWN)
+            # Check currency-first with symbol attached or separated by unicode whitespace
+            m_cf = re.match(r"^([A-Za-z]+)\s*([\$\€\£])\s*(\S+)$", s)
+            if m_cf:
+                c_candidate, sym_candidate, amt_candidate = m_cf.groups()
+                if c_candidate.upper() in CURRENCY_MAP:
+                    code = c_candidate.upper()
+                    sym = sym_candidate
+                    amt_str = amt_candidate
+                else:
+                    return dict(UNKNOWN)
+            else:
+                return dict(UNKNOWN)
     elif len(parts) == 3:
         p0, p1, p2 = parts[0], parts[1], parts[2]
         if p0.upper() in CURRENCY_MAP and p2 in SYMBOL_MAP:
@@ -137,7 +148,18 @@ def parse_reward(text: str) -> dict:
         else:
             return dict(UNKNOWN)
     else:
-        return dict(UNKNOWN)
+        # Also check if it's a 3-token currency-first format matched by regex
+        m_cf = re.match(r"^([A-Za-z]+)\s*([\$\€\£])\s*(\S+)$", s)
+        if m_cf:
+            c_candidate, sym_candidate, amt_candidate = m_cf.groups()
+            if c_candidate.upper() in CURRENCY_MAP:
+                code = c_candidate.upper()
+                sym = sym_candidate
+                amt_str = amt_candidate
+            else:
+                return dict(UNKNOWN)
+        else:
+            return dict(UNKNOWN)
 
     dec = _parse_amount_token(amt_str)
     if dec is None:
@@ -152,7 +174,7 @@ def parse_reward(text: str) -> dict:
         resolved_kind, resolved_curr = CURRENCY_MAP[code]
     elif sym and code:
         kind_c, curr_c = CURRENCY_MAP[code]
-        if sym == "$" and curr_c in ("USD", "USDC", "USDT"):
+        if sym == "$" and (curr_c in ("USD", "USDC", "USDT") or code in CURRENCIES_CRYPTO):
             resolved_curr = curr_c
             resolved_kind = kind_c
         elif sym == "€" and curr_c == "EUR":
@@ -165,6 +187,15 @@ def parse_reward(text: str) -> dict:
             return dict(UNKNOWN)
     else:
         return dict(UNKNOWN)
+    
+    # Validate that if a currency code is present with a symbol, the symbol matches the expected kind/currency
+    if code and sym:
+        kind_c, curr_c = CURRENCY_MAP[code]
+        if sym == "$" and kind_c == "crypto":
+            resolved_curr = curr_c
+            resolved_kind = "crypto"
+        elif sym == "$" and curr_c not in ("USD", "USDC", "USDT"):
+            return dict(UNKNOWN)
 
     if force_site_balance:
         resolved_kind = "site-balance"
