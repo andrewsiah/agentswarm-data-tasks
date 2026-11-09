@@ -1,207 +1,157 @@
-"""Parse one reward string; see SPEC.md."""
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import re
-
-CURRENCIES_CASH = {"USD", "EUR", "GBP", "CAD", "AUD", "CHF", "JPY", "INR"}
-CURRENCIES_CRYPTO = {"USDC", "USDT", "ETH", "BTC", "SOL"}
-CURRENCIES_POINTS = {"XTR", "POINTS"}
-CURRENCIES_BALANCE = {"CREDITS"}
-
-SYMBOL_MAP = {
-    "$": ("USD", "cash"),
-    "€": ("EUR", "cash"),
-    "£": ("GBP", "cash"),
-}
-
-CURRENCY_MAP = {}
-for c in CURRENCIES_CASH:
-    CURRENCY_MAP[c] = ("cash", c)
-for c in CURRENCIES_CRYPTO:
-    CURRENCY_MAP[c] = ("crypto", c)
-for c in CURRENCIES_POINTS:
-    CURRENCY_MAP[c] = ("points", c)
-for c in CURRENCIES_BALANCE:
-    CURRENCY_MAP[c] = ("site-balance", "CREDITS")
-
-UNKNOWN = {"amount": None, "currency": None, "kind": "unknown"}
-
-
-def _parse_amount_token(s: str):
-    if not s or not s.isascii():
-        return None
-    if "," in s:
-        int_part = s.split(".", 1)[0]
-        groups = int_part.split(",")
-        if not groups[0] or len(groups[0]) > 3 or not groups[0].isdigit():
-            return None
-        for g in groups[1:]:
-            if len(g) != 3 or not g.isdigit():
-                return None
-        if "." in s:
-            frac = s.split(".", 1)[1]
-            if not frac or "." in frac or "," in frac or not frac.isdigit():
-                return None
-    else:
-        if "." in s:
-            parts = s.split(".")
-            if len(parts) != 2 or not parts[0] or not parts[1]:
-                return None
-            if not (parts[0].isdigit() and parts[1].isdigit()):
-                return None
-        else:
-            if not s.isdigit():
-                return None
-    try:
-        dec = Decimal(s.replace(",", ""))
-        if not dec.is_finite() or dec < 0:
-            return None
-        return dec
-    except Exception:
-        return None
 
 
 def parse_reward(text: str) -> dict:
-    if not isinstance(text, str) or "\x00" in text:
-        return dict(UNKNOWN)
+    if not isinstance(text, str):
+        return {"amount": None, "currency": None, "kind": "unknown"}
 
-    tokens_raw = text.strip().split()
-    if not tokens_raw:
-        return dict(UNKNOWN)
-    s = " ".join(tokens_raw)
+    s = text.strip()
 
-    m_pref = re.match(r"^(?:reward|bounty)\s*:\s*(.*)$", s, flags=re.IGNORECASE)
-    if m_pref:
-        s = m_pref.group(1).strip()
+    prefix_pattern = re.compile(r'^(?:reward|bounty)\s*:\s*', re.IGNORECASE)
+    s = prefix_pattern.sub('', s).strip()
 
-    m_qual = re.match(r"^(?:up\s+to|approximately|~)\s*(.*)$", s, flags=re.IGNORECASE)
-    if m_qual:
-        s = m_qual.group(1).strip()
+    qualifier_pattern = re.compile(r'^(?:up\s+to|approximately|~)\s*', re.IGNORECASE)
+    s = qualifier_pattern.sub('', s).strip()
 
-    m_fix = re.search(r"\s*\(\s*test\s+fixture\s*\)$", s, flags=re.IGNORECASE)
-    if m_fix:
-        tail = s[m_fix.start():].strip().lower()
-        if tail != "(test fixture)":
-            return dict(UNKNOWN)
-        s = s[:m_fix.start()].strip()
+    test_fixture_pattern = re.compile(r'\s*\(\s*test\s+fixture\s*\)\s*$', re.IGNORECASE)
+    s = test_fixture_pattern.sub('', s).strip()
 
-    force_site_balance = False
-    for pat in (
-        r"\s+gross\s+of\s+site\s+balance$",
-        r"\s+\(site\s+balance\)$",
-        r"\s+site\s+balance$",
-    ):
-        m_sb = re.search(pat, s, flags=re.IGNORECASE)
-        if m_sb:
-            force_site_balance = True
-            s = s[:m_sb.start()].strip()
+    site_balance_override = False
+    sb_patterns = [
+        re.compile(r'\s+gross\s+of\s+site\s+balance\s*$', re.IGNORECASE),
+        re.compile(r'\s+\(?\s*site\s+balance\s*\)?\s*$', re.IGNORECASE),
+    ]
+    for pat in sb_patterns:
+        if pat.search(s):
+            site_balance_override = True
+            s = pat.sub('', s).strip()
             break
 
-    if not s:
-        return dict(UNKNOWN)
+    tokens = s.split()
+    if not tokens or len(tokens) > 2:
+        return {"amount": None, "currency": None, "kind": "unknown"}
 
-    parts = s.split()
-    sym = None
-    amt_str = None
-    code = None
+    amount_str = None
+    curr_str = None
+    symbol_found = None
 
-    if len(parts) == 1:
-        p0 = parts[0]
-        if p0 and p0[0] in SYMBOL_MAP:
-            sym = p0[0]
-            amt_str = p0[1:]
-        else:
-            return dict(UNKNOWN)
-    elif len(parts) == 2:
-        p0, p1 = parts[0], parts[1]
-        if p0 in SYMBOL_MAP:
-            sym = p0
-            amt_str = p1
-        elif p0.upper() in CURRENCY_MAP:
-            code = p0.upper()
-            amt_str = p1
-        elif p1.upper() in CURRENCY_MAP:
-            code = p1.upper()
-            amt_str = p0
-        else:
-            # Check currency-first with symbol attached or separated by unicode whitespace
-            m_cf = re.match(r"^([A-Za-z]+)\s*([\$\€\£])\s*(\S+)$", s)
-            if m_cf:
-                c_candidate, sym_candidate, amt_candidate = m_cf.groups()
-                if c_candidate.upper() in CURRENCY_MAP:
-                    code = c_candidate.upper()
-                    sym = sym_candidate
-                    amt_str = amt_candidate
-                else:
-                    return dict(UNKNOWN)
+    def parse_amount_str(t):
+        sym = None
+        if t.startswith(('$', '€', '£')):
+            sym = t[0]
+            t = t[1:]
+        amt_pat = re.compile(r'^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$')
+        if amt_pat.match(t):
+            return t, sym
+        return None, None
+
+    if len(tokens) == 1:
+        t = tokens[0]
+        if t[0] in ('$', '€', '£'):
+            sym = t[0]
+            rem = t[1:]
+            amt, _ = parse_amount_str(rem)
+            if amt:
+                amount_str = amt
+                symbol_found = sym
+                if sym == '$':
+                    curr_str = 'USD'
+                elif sym == '€':
+                    curr_str = 'EUR'
+                elif sym == '£':
+                    curr_str = 'GBP'
             else:
-                return dict(UNKNOWN)
-    elif len(parts) == 3:
-        p0, p1, p2 = parts[0], parts[1], parts[2]
-        if p0.upper() in CURRENCY_MAP and p2 in SYMBOL_MAP:
-            code = p0.upper()
-            amt_str = p1
-            sym = p2
-        elif p0 in SYMBOL_MAP and p2.upper() in CURRENCY_MAP:
-            sym = p0
-            amt_str = p1
-            code = p2.upper()
+                return {"amount": None, "currency": None, "kind": "unknown"}
         else:
-            return dict(UNKNOWN)
-    else:
-        # Also check if it's a 3-token currency-first format matched by regex
-        m_cf = re.match(r"^([A-Za-z]+)\s*([\$\€\£])\s*(\S+)$", s)
-        if m_cf:
-            c_candidate, sym_candidate, amt_candidate = m_cf.groups()
-            if c_candidate.upper() in CURRENCY_MAP:
-                code = c_candidate.upper()
-                sym = sym_candidate
-                amt_str = amt_candidate
+            return {
+                "amount": None,
+                "currency": None,
+                "kind": "unknown",
+            }
+    elif len(tokens) == 2:
+        t1, t2 = tokens[0], tokens[1]
+
+        amt1, sym1 = parse_amount_str(t1)
+        if amt1:
+            amount_str = amt1
+            symbol_found = sym1
+            curr_str = t2
+        else:
+            amt2, sym2 = parse_amount_str(t2)
+            if amt2:
+                amount_str = amt2
+                symbol_found = sym2
+                curr_str = t1
             else:
-                return dict(UNKNOWN)
-        else:
-            return dict(UNKNOWN)
+                return {
+                    "amount": None,
+                    "currency": None,
+                    "kind": "unknown",
+                }
 
-    dec = _parse_amount_token(amt_str)
-    if dec is None:
-        return dict(UNKNOWN)
+    if not amount_str or not curr_str:
+        return {"amount": None, "currency": None, "kind": "unknown"}
 
-    resolved_curr = None
-    resolved_kind = None
+    curr_upper = curr_str.upper()
+    if curr_upper == 'POINT':
+        curr_upper = 'POINTS'
+    elif curr_upper == 'CREDIT':
+        curr_upper = 'CREDITS'
 
-    if sym and not code:
-        resolved_curr, resolved_kind = SYMBOL_MAP[sym]
-    elif code and not sym:
-        resolved_kind, resolved_curr = CURRENCY_MAP[code]
-    elif sym and code:
-        kind_c, curr_c = CURRENCY_MAP[code]
-        if sym == "$" and (curr_c in ("USD", "USDC", "USDT") or code in CURRENCIES_CRYPTO):
-            resolved_curr = curr_c
-            resolved_kind = kind_c
-        elif sym == "€" and curr_c == "EUR":
-            resolved_curr = "EUR"
-            resolved_kind = "cash"
-        elif sym == "£" and curr_c == "GBP":
-            resolved_curr = "GBP"
-            resolved_kind = "cash"
-        else:
-            return dict(UNKNOWN)
+    if symbol_found:
+        if symbol_found == '$':
+            if curr_upper not in ('USD', 'USDC', 'USDT'):
+                return {
+                    "amount": None,
+                    "currency": None,
+                    "kind": "unknown",
+                }
+        elif symbol_found == '€':
+            if curr_upper != 'EUR':
+                return {
+                    "amount": None,
+                    "currency": None,
+                    "kind": "unknown",
+                }
+        elif symbol_found == '£':
+            if curr_upper != 'GBP':
+                return {
+                    "amount": None,
+                    "currency": None,
+                    "kind": "unknown",
+                }
+
+    cash_currencies = {'USD', 'EUR', 'GBP', 'CAD', 'AUD', 'CHF', 'JPY', 'INR'}
+    crypto_currencies = {'USDC', 'USDT', 'ETH', 'BTC', 'SOL'}
+    points_currencies = {'XTR', 'POINTS'}
+    site_balance_currencies = {'CREDITS'}
+
+    kind = None
+    if curr_upper in cash_currencies:
+        kind = 'cash'
+    elif curr_upper in crypto_currencies:
+        kind = 'crypto'
+    elif curr_upper in points_currencies:
+        kind = 'points'
+    elif curr_upper in site_balance_currencies:
+        kind = 'site-balance'
     else:
-        return dict(UNKNOWN)
-    
-    # Validate that if a currency code is present with a symbol, the symbol matches the expected kind/currency
-    if code and sym:
-        kind_c, curr_c = CURRENCY_MAP[code]
-        if sym == "$" and kind_c == "crypto":
-            resolved_curr = curr_c
-            resolved_kind = "crypto"
-        elif sym == "$" and curr_c not in ("USD", "USDC", "USDT"):
-            return dict(UNKNOWN)
+        return {"amount": None, "currency": None, "kind": "unknown"}
 
-    if force_site_balance:
-        resolved_kind = "site-balance"
+    if site_balance_override:
+        kind = 'site-balance'
+
+    try:
+        clean_amt_str = amount_str.replace(',', '')
+        dec_amount = Decimal(clean_amt_str)
+        if not dec_amount.is_finite() or dec_amount < 0:
+            return {"amount": None, "currency": None, "kind": "unknown"}
+    except (InvalidOperation, ValueError):
+        return {"amount": None, "currency": None, "kind": "unknown"}
 
     return {
-        "amount": dec,
-        "currency": resolved_curr,
-        "kind": resolved_kind,
+        "amount": dec_amount,
+        "currency": curr_upper,
+        "kind": kind,
     }
