@@ -17,7 +17,7 @@ _CURRENCY = r"USD|EUR|GBP|CAD|AUD|CHF|JPY|INR|USDC|USDT|ETH|BTC|SOL|XTR|POINTS|C
 _CORE = re.compile(
     rf"(?:"
     rf"(?P<symbol>[$€£])?\s*(?P<amount>{_AMOUNT})\s*(?P<after>{_CURRENCY})?"
-    rf"|(?P<before>{_CURRENCY})\s*(?P<other_amount>{_AMOUNT})"
+    rf"|(?P<before>{_CURRENCY})\s*(?P<before_symbol>[$€£])?\s*(?P<other_amount>{_AMOUNT})"
     rf")",
     re.IGNORECASE,
 )
@@ -29,7 +29,7 @@ def _parse_core(text):
     if match is None:
         return None
 
-    symbol = match.group("symbol")
+    symbol = match.group("symbol") or match.group("before_symbol")
     currency = match.group("after") or match.group("before")
     currency = currency.upper() if currency else None
     if currency is not None and currency not in CURRENCY_KINDS:
