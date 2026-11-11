@@ -1,0 +1,100 @@
+[
+  {
+    "args": [
+      [],
+      "a"
+    ],
+    "expected": 0
+  },
+  {
+    "args": [
+      [
+        "apple",
+        "avocado",
+        "banana"
+      ],
+      "a"
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      [
+        "Apple",
+        "apple"
+      ],
+      "a"
+    ],
+    "expected": 1
+  },
+  {
+    "args": [
+      [
+        "ab",
+        "b"
+      ],
+      ""
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      [
+        "abc",
+        "ab",
+        "a"
+      ],
+      "ab"
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      [
+        " ab",
+        "ab"
+      ],
+      "ab"
+    ],
+    "expected": 1
+  },
+  {
+    "args": [
+      [
+        "ab",
+        "ab"
+      ],
+      "ab"
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      [
+        "xab",
+        "abx"
+      ],
+      "ab"
+    ],
+    "expected": 1
+  },
+  {
+    "args": [
+      [
+        "\u00e9",
+        "e\u0301"
+      ],
+      "e"
+    ],
+    "expected": 1
+  },
+  {
+    "args": [
+      [
+        "a"
+      ],
+      "abc"
+    ],
+    "expected": 0
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "args": [
+      "listen",
+      "silent"
+    ],
+    "expected": true
+  },
+  {
+    "args": [
+      "",
+      ""
+    ],
+    "expected": true
+  },
+  {
+    "args": [
+      "a",
+      "a"
+    ],
+    "expected": true
+  },
+  {
+    "args": [
+      "ab",
+      "a"
+    ],
+    "expected": false
+  },
+  {
+    "args": [
+      "aab",
+      "abb"
+    ],
+    "expected": false
+  },
+  {
+    "args": [
+      "Listen",
+      "silent"
+    ],
+    "expected": false
+  },
+  {
+    "args": [
+      "dormitory",
+      "dirty room"
+    ],
+    "expected": false
+  },
+  {
+    "args": [
+      "a b",
+      "ba "
+    ],
+    "expected": true
+  },
+  {
+    "args": [
+      "\u00e9",
+      "e\u0301"
+    ],
+    "expected": false
+  },
+  {
+    "args": [
+      "\ud83d\ude80\ud83e\udd16",
+      "\ud83e\udd16\ud83d\ude80"
+    ],
+    "expected": true
+  },
+  {
+    "args": [
+      "abc",
+      "abd"
+    ],
+    "expected": false
+  }
+]

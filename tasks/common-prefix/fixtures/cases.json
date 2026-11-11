@@ -1,0 +1,93 @@
+[
+  {
+    "args": [
+      [
+        "a"
+      ]
+    ],
+    "expected": "a"
+  },
+  {
+    "args": [
+      [
+        "flower",
+        "flow",
+        "flight"
+      ]
+    ],
+    "expected": "fl"
+  },
+  {
+    "args": [
+      [
+        "dog",
+        "racecar"
+      ]
+    ],
+    "expected": ""
+  },
+  {
+    "args": [
+      [
+        "abc",
+        "abc"
+      ]
+    ],
+    "expected": "abc"
+  },
+  {
+    "args": [
+      [
+        "ab",
+        "abc"
+      ]
+    ],
+    "expected": "ab"
+  },
+  {
+    "args": [
+      [
+        "",
+        "abc"
+      ]
+    ],
+    "expected": ""
+  },
+  {
+    "args": [
+      [
+        "Ab",
+        "ab"
+      ]
+    ],
+    "expected": ""
+  },
+  {
+    "args": [
+      [
+        "interview",
+        "internet",
+        "interval"
+      ]
+    ],
+    "expected": "inter"
+  },
+  {
+    "args": [
+      [
+        "\u00e9",
+        "e\u0301"
+      ]
+    ],
+    "expected": ""
+  },
+  {
+    "args": [
+      [
+        "e\u0301x",
+        "e\u0301y"
+      ]
+    ],
+    "expected": "e\u0301"
+  }
+]

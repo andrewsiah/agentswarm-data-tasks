@@ -1,0 +1,112 @@
+[
+  {
+    "args": [
+      ""
+    ],
+    "expected": 0
+  },
+  {
+    "args": [
+      "hello"
+    ],
+    "expected": 1
+  },
+  {
+    "args": [
+      "hello world"
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      "  leading and trailing  "
+    ],
+    "expected": 3
+  },
+  {
+    "args": [
+      "a\tb\nc"
+    ],
+    "expected": 3
+  },
+  {
+    "args": [
+      "don't stop"
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      "a - b"
+    ],
+    "expected": 3
+  },
+  {
+    "args": [
+      "one,two"
+    ],
+    "expected": 1
+  },
+  {
+    "args": [
+      "x\u00a0y"
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      "Hello hello"
+    ],
+    "expected": 2
+  },
+  {
+    "args": [
+      "   "
+    ],
+    "expected": 0
+  },
+  {
+    "args": [
+      [
+        "a"
+      ]
+    ],
+    "error": "TypeError"
+  },
+  {
+    "args": [
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ],
+    "error": "ValueError"
+  },
+  {
+    "args": [
+      "a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a "
+    ],
+    "expected": 500
+  },
+  {
+    "args": [
+      "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "
+    ],
+    "expected": 0
+  },
+  {
+    "args": [
+      "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+    ],
+    "expected": 1
+  },
+  {
+    "args": [
+      "a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n"
+    ],
+    "expected": 500
+  },
+  {
+    "args": [
+      "a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0a\u00a0"
+    ],
+    "expected": 500
+  }
+]
